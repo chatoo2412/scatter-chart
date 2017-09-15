@@ -1,3 +1,9 @@
+# Dependencies
 node_modules/
 
+# Configurations
+config/*.js
+!config/default.js
+
+# Build
 dist/
