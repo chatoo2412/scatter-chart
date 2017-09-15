@@ -1,0 +1,24 @@
+{
+  "name": "scatter-chart",
+  "version": "0.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:chatii2412/scatter-chart.git",
+  "author": "Wooram Jun <chatii2412@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint .",
+    "dev": "cross-env NODE_ENV=development webpack-dev-server",
+    "build": "cross-env NODE_ENV=production webpack -p --progress"
+  },
+  "devDependencies": {
+    "axios": "^0.16.2",
+    "config": "^1.26.2",
+    "cross-env": "^5.0.5",
+    "eslint": "^4.6.1",
+    "eslint-config-airbnb-base": "^12.0.0",
+    "eslint-plugin-import": "^2.7.0",
+    "rxjs": "^5.4.3",
+    "webpack": "^3.5.6",
+    "webpack-dev-server": "^2.8.2"
+  }
+}

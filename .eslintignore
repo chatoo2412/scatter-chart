@@ -1,0 +1,6 @@
+# Include dotfiles that are excluded by default
+!.*
+node_modules/.*
+
+# Build
+dist/
