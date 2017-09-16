@@ -17,7 +17,7 @@ const extractSass = new ExtractTextPlugin({
 
 const cfg = {
 	context: path.resolve(__dirname, './src/'),
-	entry: './main.js',
+	entry: './entry.js',
 	output: {
 		path: path.resolve(__dirname, './dist/'),
 		filename: '[name].[chunkhash].js',
