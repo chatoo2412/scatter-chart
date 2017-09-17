@@ -1,11 +1,13 @@
 # scatter-chart
 
-> An Alternative to JENIFFER5 X-View.
+> Scatter chart for huge dataset.
+
+Please read the [wiki].
 
 ## Prerequisites
 
-* [Node.js 8+](https://nodejs.org/)
-* [Google Chrome 61+](https://google.com/chrome/)
+* [Node.js 8+]
+* [Google Chrome 61+]
 
 ## Quick Start
 
@@ -27,3 +29,7 @@ $ npm test
 $ npm run build
 $ npm start
 ```
+
+[wiki]: https://github.com/chatii2412/scatter-chart/wiki
+[Node.js 8+]: https://nodejs.org/
+[Google Chrome 61+]: https://google.com/chrome/
