@@ -10,7 +10,7 @@ module.exports = {
 		worker: true,
 	},
 	globals: {
-		config: true, // Variable passed from webpack
+		config: true, // A variable passed from webpack.
 	},
 	extends: [
 		'airbnb-base',
@@ -23,6 +23,10 @@ module.exports = {
 		semi: ['warn', 'never'],
 		indent: ['warn', 'tab'],
 		'no-tabs': 'off',
+		'import/prefer-default-export': 'off',
+		'no-underscore-dangle': ['error', {
+			allow: ['_options'],
+		}],
 
 		// Webpack-related
 		'import/no-extraneous-dependencies': ['error', {
