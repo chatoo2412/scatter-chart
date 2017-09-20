@@ -18,6 +18,8 @@ $ npm install
 # Create and edit configuration files.
 $ cp config/default.js config/development.js
 $ vi config/development.js
+$ cp config/default.js config/production.js
+$ vi config/production.js
 
 # Serve with hot reload at localhost:3000.
 $ npm run dev

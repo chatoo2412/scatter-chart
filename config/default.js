@@ -5,7 +5,7 @@ module.exports = {
 		devtool: 'source-map',
 	},
 	client: {
-		axios: {
+		api: {
 			baseUrl: 'http://localhost:3001/',
 		},
 	},

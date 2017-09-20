@@ -1,5 +1,9 @@
 @import './normalize';
 
+body {
+	background-color: #eeeeee;
+}
+
 #canvas {
 	@at-root body {
 		overflow: hidden;
@@ -7,4 +11,5 @@
 
 	width: 100vw;
 	height: 100vh;
+	image-rendering: pixelated;
 }
