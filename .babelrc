@@ -1,0 +1,10 @@
+{
+	"presets": [
+		["env", {
+			"targets": {
+				"browsers": ["Chrome >= 61"]
+			}
+		}]
+	],
+	"plugins": ["lodash"]
+}
