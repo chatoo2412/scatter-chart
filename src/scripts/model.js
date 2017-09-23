@@ -1,22 +1,30 @@
 import axios from 'axios'
+import axiosRetry from 'axios-retry'
 
-axios.defaults.baseURL = config.axios.baseUrl
+axios.defaults.baseURL = process.env.CONFIG.api.baseUrl
+
+axiosRetry(axios, { retries: 3 })
 
 /**
- * Get transactions from API server.
+ * Get transactions from API server and store its endTime and responseTime.
  *
- * @param {object} options
- * @param {number} options.from - Unix timestamp
- * @param {number} options.to   - Unix timestamp
+ * @param   {number}  to      - End time in unix timestamp.
+ * @param   {number}  [from]  - Start time in unix timestamp.
+ * @returns {Promise} Promise object represents endTimes and responseTimes.
  */
-const getTransactions = async ({ from, to }) => axios.get(`api/transaction/time?domain_id=7000&start_time=${from}&end_time=${to}`).TransactionData
+const get = async ({ to, from = (to - 60000) }) => {
+	const { data: { TransactionData: transactions } } = await axios.get(
+		'api/transaction/time',
+		{ params: { domain_id: 7000, start_time: from, end_time: to } },
+	)
 
-const total = 200000
+	const coords = []
 
-const dummyData = []
+	for (let i = 0; i < transactions.length; i += 1) {
+		coords.push([Number(transactions[i].endTime), transactions[i].responseTime])
+	}
 
-for (let i = 0; i < total; i += 1) {
-	dummyData.push([Math.random(), Math.random()])
+	return coords
 }
 
-export { getTransactions, dummyData }
+export default { get }

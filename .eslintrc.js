@@ -9,9 +9,6 @@ module.exports = {
 		browser: true,
 		worker: true,
 	},
-	globals: {
-		config: true, // A variable passed from webpack.
-	},
 	extends: [
 		'airbnb-base',
 	],
@@ -21,12 +18,29 @@ module.exports = {
 	rules: {
 		// Own rules
 		semi: ['warn', 'never'],
-		indent: ['warn', 'tab'],
+		indent: ['warn', 'tab', {
+			SwitchCase: 1,
+			VariableDeclarator: 1,
+			outerIIFEBody: 1,
+			FunctionDeclaration: {
+				parameters: 1,
+				body: 1,
+			},
+			FunctionExpression: {
+				parameters: 1,
+				body: 1,
+			},
+			CallExpression: {
+				arguments: 1,
+			},
+			ArrayExpression: 1,
+			ObjectExpression: 1,
+			ImportDeclaration: 1,
+			flatTernaryExpressions: false,
+		}],
+		'max-len': 'off',
 		'no-tabs': 'off',
 		'import/prefer-default-export': 'off',
-		'no-underscore-dangle': ['error', {
-			allow: ['_options'],
-		}],
 
 		// Webpack-related
 		'import/no-extraneous-dependencies': ['error', {

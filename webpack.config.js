@@ -69,8 +69,8 @@ const cfg = {
 
 	plugins: [
 		new webpack.DefinePlugin({
-			config: JSON.stringify(config.get('client')),
 			'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+			'process.env.CONFIG': JSON.stringify(config.get('client')),
 		}),
 
 		new webpack.optimize.ModuleConcatenationPlugin(),
