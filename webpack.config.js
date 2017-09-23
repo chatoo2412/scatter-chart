@@ -54,6 +54,7 @@ const cfg = {
 						{
 							loader: 'css-loader',
 							options: {
+								minimize: !isDev,
 								sourceMap: true,
 							},
 						},
