@@ -1,19 +1,23 @@
-// import _ from 'lodash'
+import _ from 'lodash'
 import moment from 'moment'
 
 import Chart from '~/scripts/lib/Chart'
 import model from '~/scripts/model'
 
-const target = 20000 // Total number of points.
+const options = {
+	target: 200000, // Total number of points.
+	updateInterval: 1000, // Update interval in milliseconds.
+	resizeDelay: 0, // Debounce delay in milliseconds when resizing the window. Set 0 to disable.
+}
 
-const now = moment()
+const now = moment().valueOf()
 
 const canvasElement = document.getElementById('canvas')
 const chart = new Chart(canvasElement, {
-	target,
+	target: options.target,
 	xAxis: {
 		min: 0,
-		max: now.valueOf(),
+		max: now,
 		labelize: value => moment(value).format('HH:mm:ss.SSS'),
 	},
 	yAxis: {
@@ -29,25 +33,64 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 const init = async () => {
-	const from = now.clone().startOf('minute')
-	const to = now.clone()
+	let from = moment(now).startOf('minute').valueOf()
+	let to = now
 
 	// Get from HH:mm:00.000 to HH:mm:ss.SSS.
-	chart.addCoords(await model.get({ to: to.valueOf(), from: from.valueOf() }), true)
+	const newCoordsThisMinute = await model.get({ from, to })
+	chart.addCoords(newCoordsThisMinute, to)
 
-	from.subtract(1, 'minute')
-	to.startOf('minute')
+	while (chart.coords.length < options.target) {
+		to = from
+		from -= 60000
 
-	while (chart.coords.length < target) {
-		chart.addCoords(await model.get({ to: to.valueOf(), from: from.valueOf() }), true) // eslint-disable-line no-await-in-loop
+		const newCoords = await model.get({ from, to }) // eslint-disable-line no-await-in-loop
+		chart.addCoords(newCoords, to)
+	}
+}
 
-		from.subtract(1, 'minute')
-		to.subtract(1, 'minute')
+const update = async () => {
+	let from = now
+	let to = moment().valueOf()
+
+	setInterval(async () => {
+		from = to
+		to = moment().valueOf()
+
+		const newCoords = await model.get({ from, to })
+		chart.addCoords(newCoords, to)
+	}, options.updateInterval)
+}
+
+const resizeChart = () => {
+	chart.resize({
+		width: window.innerWidth,
+		height: window.innerHeight,
+	})
+}
+
+let optimizedResize
+
+if (options.resizeDelay) {
+	optimizedResize = _.debounce(resizeChart, options.resizeDelay)
+} else {
+	let isBusy = false
+
+	optimizedResize = () => {
+		if (isBusy) { return }
+
+		isBusy = true
+
+		requestAnimationFrame(() => {
+			resizeChart()
+
+			isBusy = false
+		})
 	}
 }
 
 const setYMax = (event) => {
-	switch (event.key) { // CAUTION: KeyboardEvent.key is nonstandard currently.
+	switch (event.key) { // CAUTION: `KeyboardEvent.key` is non-standard at this moment.
 		case 'ArrowUp':
 			chart.changeYMaxInSteps(1)
 			break
@@ -60,5 +103,7 @@ const setYMax = (event) => {
 	}
 }
 
-window.addEventListener('load', event => init())
+window.addEventListener('load', init)
+window.addEventListener('load', update)
+window.addEventListener('resize', optimizedResize)
 window.addEventListener('keydown', setYMax)

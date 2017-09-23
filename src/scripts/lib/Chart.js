@@ -10,9 +10,9 @@ const defaults = {
 		height: window.innerHeight,
 	},
 	plotArea: {
-		top: 20,
+		top: 30,
 		bottom: 30,
-		left: 60,
+		left: 70,
 		right: 40,
 		lineWidth: 1,
 		lineColor: [0, 0, 0, 255],
@@ -69,7 +69,7 @@ class Chart {
 		_private.set(this, { options, plot })
 
 		// Initiate the canvas.
-		this.resizeCanvas({
+		this.resize({
 			width: options.canvas.width,
 			height: options.canvas.height,
 		})
@@ -78,7 +78,7 @@ class Chart {
 	/**
 	 * Resize, clear and redraw the canvas.
 	 */
-	resizeCanvas({ width, height }) {
+	resize({ width, height }) {
 		const { options, plot } = _private.get(this)
 
 		const pixelRatio = window.devicePixelRatio
@@ -104,6 +104,7 @@ class Chart {
 		)
 
 		this.changeYMaxInSteps(0) // Draw y-axis' labels.
+		this.updateCounter()
 	}
 
 	/**
@@ -131,16 +132,20 @@ class Chart {
 			options.plotArea.left - options.plotArea.lineWidth,
 			options.plotArea.top + plot.canvas.height + options.plotArea.lineWidth,
 		)
+
 		this.context.textAlign = 'right'
 		this.context.textBaseline = 'middle'
 		this.context.font = options.label.font
 		this.context.fillStyle = `rgba(${options.label.color.join(',')})`
+
 		this.context.fillText(
 			options.yAxis.labelize(options.yAxis.max),
 			options.plotArea.left - options.label.margin,
 			options.plotArea.top,
 		)
+
 		this.context.textBaseline = 'bottom'
+
 		this.context.fillText(
 			options.yAxis.labelize(options.yAxis.min),
 			options.plotArea.left - options.label.margin,
@@ -163,6 +168,7 @@ class Chart {
 			options.plotArea.left + plot.canvas.width + options.plotArea.right,
 			options.plotArea.bottom,
 		)
+
 		this.context.textAlign = 'center'
 		this.context.textBaseline = 'top'
 		this.context.font = options.label.font
@@ -185,30 +191,37 @@ class Chart {
 	 * Append or prepend new coordinates.
 	 * `this.coords` should be sorted in ascending order by the x-coordinate.
 	 *
-	 * @param {coord[]} coords    - An array of coordinates.
+	 * @param {coord[]} newCoords - An array of coordinates.
 	 * @param {number}  coord[0]  - The x-coordinate.
 	 * @param {number}  coord[1]  - The y-coordinate.
-	 * @param {boolean} [prepend] - Prepend or not.
+	 * @param {number}  maxX      - The Maximum value of x-axis.
 	 */
-	addCoords(coords, prepend = false) {
+	addCoords(newCoords, maxX) {
 		const { options } = _private.get(this)
 
-		this.coords[prepend ? 'unshift' : 'push'](...coords)
+		const isNew = maxX > options.xAxis.max
 
-		const overflows = this.coords.length - options.target
+		if (newCoords.length) {
+			this.coords[isNew ? 'push' : 'unshift'](...newCoords) // CAUTION: Stack overflow may occur.
 
-		if (overflows > 0) {
-			coords.splice(0, overflows)
+			const overflows = this.coords.length - options.target
+
+			if (overflows > 0) {
+				this.coords.splice(0, overflows)
+			}
+
+			options.xAxis.min = this.coords[0][0] // eslint-disable-line prefer-destructuring
 		}
 
-		options.xAxis.min = this.coords[0][0] // eslint-disable-line prefer-destructuring
+		if (isNew) { options.xAxis.max = maxX }
 		options.xAxis.distance = options.xAxis.max - options.xAxis.min
 
 		this.drawPoints()
+		this.updateCounter()
 	}
 
 	/**
-	 * Draw points in this.coords.
+	 * Draw points of `this.coords`.
 	 */
 	drawPoints() {
 		const { options, plot } = _private.get(this)
@@ -241,6 +254,31 @@ class Chart {
 
 		this.setXBounds()
 		this.context.drawImage(plot.canvas, options.plotArea.left, options.plotArea.top)
+	}
+
+	/**
+	 * Update the counter.
+	 */
+	updateCounter() {
+		const { options, plot } = _private.get(this)
+
+		this.context.clearRect(
+			options.plotArea.left - options.plotArea.lineWidth,
+			0,
+			options.plotArea.lineWidth + plot.canvas.width + options.plotArea.lineWidth,
+			options.plotArea.top - options.plotArea.lineWidth,
+		)
+
+		this.context.textAlign = 'right'
+		this.context.textBaseline = 'bottom'
+		this.context.font = options.label.font
+		this.context.fillStyle = `rgba(${options.label.color.join(',')})`
+
+		this.context.fillText(
+			`count: ${this.coords.length.toLocaleString()}`,
+			options.plotArea.left + plot.canvas.width,
+			options.plotArea.top - options.label.margin,
+		)
 	}
 }
 
