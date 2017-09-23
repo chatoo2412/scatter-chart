@@ -2,9 +2,12 @@ const BabelMinifyPlugin = require('babel-minify-webpack-plugin')
 const config = require('config')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 const path = require('path')
-const pkg = require('./package')
 const webpack = require('webpack')
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
+
+const pkg = require('./package')
 
 const { host, port, devtool } = config.get('webpack')
 
@@ -36,6 +39,11 @@ const cfg = {
 						emitWarning: isDev,
 					},
 				},
+			},
+			{
+				test: /\.js$/,
+				exclude: /node_modules/,
+				use: 'babel-loader',
 			},
 			{
 				test: /\.scss$/,
@@ -73,8 +81,6 @@ const cfg = {
 			'process.env.CONFIG': JSON.stringify(config.get('client')),
 		}),
 
-		new webpack.optimize.ModuleConcatenationPlugin(),
-
 		// Caching
 		(isDev ? new webpack.NamedModulesPlugin() : new webpack.HashedModuleIdsPlugin()),
 		new webpack.optimize.CommonsChunkPlugin({
@@ -103,6 +109,18 @@ ${pkg.name} v${pkg.version}
 author : ${pkg.author}
 license: ${pkg.license}
 			`.trim(),
+		}),
+
+		// Optimizing
+		new webpack.optimize.ModuleConcatenationPlugin(),
+		new LodashModuleReplacementPlugin(),
+		new webpack.ContextReplacementPlugin(
+			/moment[/\\]locale$/,
+			/ko/,
+		),
+		new BundleAnalyzerPlugin({
+			analyzerMode: isDev ? 'server' : 'static',
+			openAnalyzer: !isDev,
 		}),
 	],
 
