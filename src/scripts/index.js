@@ -17,7 +17,7 @@ import model from '~/scripts/model'
  */
 const options = {
 	target: 200000,
-	initGroupOf: 6, // Maximum connections of Chrome.
+	initGroupOf: 30,
 	refreshInterval: 1000,
 	resizeDelay: 0,
 }
@@ -41,11 +41,12 @@ const chart = new Chart(canvasElement, {
 })
 
 /**
- * Expose chart for debug.
+ * Expose the chart for debug.
  * This code will be eliminated from production bundle.
  */
 if (process.env.NODE_ENV === 'development') {
-	window.chart = chart
+	window.sc = window.sc || {}
+	window.sc.chart = chart
 }
 
 /**
