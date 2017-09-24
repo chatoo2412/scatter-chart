@@ -91,13 +91,17 @@ const update = async () => {
 	let from = now
 	let to = moment().valueOf()
 
-	setInterval(async () => {
-		const newCoords = await model.get({ from, to })
+	while (true) { // eslint-disable-line no-constant-condition
+		const [newCoords] = await Promise.all([ // eslint-disable-line no-await-in-loop
+			model.get({ from, to }),
+			new Promise(resolve => setTimeout(resolve, options.refreshInterval)), // Sleep.
+		])
+
 		chart.addCoords(newCoords, to)
 
 		from = to
 		to = moment().valueOf()
-	}, options.refreshInterval)
+	}
 }
 
 /**
