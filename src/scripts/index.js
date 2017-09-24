@@ -24,7 +24,7 @@ const options = {
 
 const now = moment().valueOf()
 
-const canvasElement = document.getElementById('canvas')
+const canvasElement = document.querySelector('#canvas')
 const chart = new Chart(canvasElement, {
 	target: options.target,
 	xAxis: {
@@ -141,11 +141,11 @@ if (options.resizeDelay) {
 const setYMax = (event) => {
 	switch (event.key) { // CAUTION: `KeyboardEvent.key` is non-standard at this moment.
 		case 'ArrowUp':
-			chart.changeYMaxInSteps(1)
+			chart.changeYMaxBySteps(1)
 			break
 
 		case 'ArrowDown':
-			chart.changeYMaxInSteps(-1)
+			chart.changeYMaxBySteps(-1)
 			break
 
 		default:

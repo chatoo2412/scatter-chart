@@ -1,44 +1,6 @@
 import _ from 'lodash-es'
 
-/**
- * Default options.
- *
- * @default
- */
-const defaults = {
-	target: 200000,
-	canvas: {
-		width: window.innerWidth,
-		height: window.innerHeight,
-	},
-	plotArea: {
-		top: 30,
-		bottom: 30,
-		left: 70,
-		right: 40,
-		lineWidth: 1,
-		lineColor: [0, 0, 0, 255],
-	},
-	xAxis: {
-		min: 0,
-		max: 1,
-		labelize: value => value,
-	},
-	yAxis: {
-		min: 0,
-		max: 1,
-		step: 0.1,
-		labelize: value => value,
-	},
-	label: {
-		margin: 4,
-		font: '12px sans-serif',
-		color: [0, 0, 0, 255],
-	},
-	point: {
-		color: [255, 0, 0, 255],
-	},
-}
+import defaultOptions from '~/scripts/lib/defaultOptions'
 
 const _private = new WeakMap() // eslint-disable-line no-underscore-dangle
 
@@ -59,7 +21,7 @@ class Chart {
 		this.context = canvasElement.getContext('2d')
 
 		// Set options.
-		const options = _.defaultsDeep(customOptions, defaults)
+		const options = _.defaultsDeep(customOptions, defaultOptions)
 		options.xAxis.distance = options.xAxis.max - options.xAxis.min
 		options.yAxis.distance = options.yAxis.max - options.yAxis.min
 
@@ -105,7 +67,7 @@ class Chart {
 			plot.canvas.height + options.plotArea.lineWidth,
 		)
 
-		this.changeYMaxInSteps(0) // Draw y-axis' labels.
+		this.changeYMaxBySteps(0) // Draw y-axis' labels.
 		this.updateCounter()
 	}
 
@@ -114,7 +76,7 @@ class Chart {
 	 *
 	 * @param {number} steps - The amount of change.
 	 */
-	changeYMaxInSteps(steps) {
+	changeYMaxBySteps(steps) {
 		const { options, plot } = _private.get(this)
 
 		const newValue = options.yAxis.max + (options.yAxis.step * steps)
