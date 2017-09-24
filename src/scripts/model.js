@@ -3,7 +3,7 @@ import axiosRetry from 'axios-retry'
 
 axios.defaults.baseURL = process.env.CONFIG.api.baseUrl
 
-axiosRetry(axios, { retries: 3 })
+axiosRetry(axios, { retries: Infinity })
 
 /**
  * Get transactions from API server and store its endTime and responseTime.

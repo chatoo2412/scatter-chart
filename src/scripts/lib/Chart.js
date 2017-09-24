@@ -2,6 +2,8 @@ import _ from 'lodash-es'
 
 /**
  * Default options.
+ *
+ * @default
  */
 const defaults = {
 	target: 200000,
@@ -188,13 +190,19 @@ class Chart {
 	}
 
 	/**
+	 * Coordinates.
+ 	 *
+	 * @typedef  {Array}  coords
+	 * @property {number} coords[0] - The x-coordinate.
+	 * @property {number} coords[1] - The y-coordinate.
+	 */
+
+	/**
 	 * Append or prepend new coordinates.
 	 * `this.coords` should be sorted in ascending order by the x-coordinate.
 	 *
-	 * @param {coord[]} newCoords - An array of coordinates.
-	 * @param {number}  coord[0]  - The x-coordinate.
-	 * @param {number}  coord[1]  - The y-coordinate.
-	 * @param {number}  maxX      - The Maximum value of x-axis.
+	 * @param {coords[]} newCoords - An array of coordinates.
+	 * @param {number}  maxX       - The Maximum value of x-axis.
 	 */
 	addCoords(newCoords, maxX) {
 		const { options } = _private.get(this)
