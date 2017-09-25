@@ -1,3 +1,5 @@
+[![StackShare](https://img.shields.io/badge/tech-stack-0690fa.svg?style=flat)](https://stackshare.io/chatii2412/scatter-chart)
+
 # scatter-chart
 
 > Scatter chart for huge dataset.
