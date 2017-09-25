@@ -1,11 +1,12 @@
 {
   "name": "scatter-chart",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "repository": "git@github.com:chatii2412/scatter-chart.git",
   "author": "Wooram Jun <chatii2412@gmail.com>",
   "license": "MIT",
   "scripts": {
     "pretest": "eslint .",
+    "test": "exit 0",
     "dev": "cross-env NODE_ENV=development webpack-dev-server",
     "build": "cross-env NODE_ENV=production webpack --progress",
     "start": "http-server -p 3000 ./dist"

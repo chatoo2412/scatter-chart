@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/chatii2412/scatter-chart.svg?branch=master)](https://travis-ci.org/chatii2412/scatter-chart)
 [![StackShare](https://img.shields.io/badge/tech-stack-0690fa.svg?style=flat)](https://stackshare.io/chatii2412/scatter-chart)
 
 # scatter-chart
