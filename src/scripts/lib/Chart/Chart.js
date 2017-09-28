@@ -172,7 +172,7 @@ class Chart {
 		const isNew = maxX > options.xAxis.max
 
 		if (newCoords.length) {
-			this.coords[isNew ? 'push' : 'unshift'](...newCoords) // CAUTION: Stack overflow may occur.
+			this.coords[isNew ? 'push' : 'unshift'](...newCoords) // CAUTION: Stack overflow may occur. https://stackoverflow.com/a/17368101
 
 			const overflows = this.coords.length - options.target
 
