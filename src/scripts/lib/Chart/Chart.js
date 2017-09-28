@@ -1,6 +1,6 @@
 import _ from 'lodash-es'
 
-import defaultOptions from '~/scripts/lib/defaultOptions'
+import defaultOptions from './defaultOptions'
 
 const _private = new WeakMap() // eslint-disable-line no-underscore-dangle
 
